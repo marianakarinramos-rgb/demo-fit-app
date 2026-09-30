@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF7E7E" id="metaTheme">
+    <title>Smart-Fit | DEMO COMERCIAL</title>
+    
+    <style>
+        :root {
+            /* Tema por defecto: Femenino (Coral Kawaii) */
+            --bg-light: #FFF5F5;
+            --surface: #FFFFFF;
+            --primary: #FF7E7E;
+            --primary-gradient: linear-gradient(135deg, #FF9A9A, #FF7E7E);
+            --text-main: #4A5568;
+            --text-muted: #A0AEC0;
+            --radius-lg: 32px;
+            --shadow: 0 10px 25px rgba(255, 126, 126, 0.12);
+            --html-bg: #FFE6E6;
+        }
+
+        /* Tema Masculino (Dark Gym / Minimalista) */
+        body.theme-male {
+            --bg-light: #0F172A;
+            --surface: #1E293B;
+            --primary: #38BDF8;
+            --primary-gradient: linear-gradient(135deg, #0284C7, #38BDF8);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --html-bg: #090D16;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; transition: background 0.3s, color 0.3s; }
+        
+        html { background-color: var(--html-bg); }
+        body { 
+            background-color: var(--bg-light); color: var(--text-main); line-height: 1.4; padding-bottom: 90px;
+            max-width: 500px; margin: 0 auto; min-height: 100vh; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            overflow-x: hidden;
+        }
+
+        .demo-banner {
+            background: #111827; color: #FFF; text-align: center; padding: 8px;
+            font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+        }
+
+        /* Selector de Modo Demo */
+        .mode-selector {
+            background: var(--surface); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 13px; font-weight: 800;
+        }
+        .mode-btns { display: flex; gap: 8px; }
+        .mode-btn { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 4px 12px; border-radius: 99px; cursor: pointer; font-weight: 800; font-size: 12px; }
+        .mode-btn.active { background: var(--primary); color: #FFF; }
+
+        .header { 
+            padding: 20px; background: var(--surface); display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .header-info { display: flex; align-items: center; gap: 16px; }
+        .header img { width: 45px; height: 45px; border-radius: 12px; object-fit: cover; }
+        .header h1 { font-size: 20px; font-weight: 900; color: var(--text-main); }
+        .header p { color: var(--primary); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+
+        .btn-manual-float {
+            background: var(--primary-gradient); color: #FFF; border: none; padding: 8px 14px;
+            border-radius: 99px; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: var(--shadow);
+            display: flex; align-items: center; gap: 4px;
+        }
+
+        .days-grid { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 24px 20px; }
+        .day-card { 
+            background: var(--surface); border-radius: var(--radius-lg); padding: 24px; 
+            border: 2px solid transparent; cursor: pointer; box-shadow: var(--shadow); 
+            position: relative; overflow: hidden; min-height: 100px; display: flex; flex-direction: column; justify-content: center;
+            transition: 0.2s;
+        }
+        .day-card:active { transform: scale(0.98); }
+        .day-card::after { content: ''; position: absolute; left: 0; top: 0; width: 12px; height: 100%; border-radius: 12px 0 0 12px;}
+        .day-num { font-size: 22px; font-weight: 900; margin-bottom: 4px; color: var(--text-main); }
+        .day-desc { font-size: 14px; font-weight: 700; color: var(--text-muted); }
+        .day-card.d1::after { background-color: #38BDF8; } 
+        .day-card.d2::after { background-color: #F43F5E; } 
+        .day-card.d3::after { background-color: #10B981; } 
+
+        .routine-container { display: none; padding: 0 20px; }
+        .routine-container.active { display: block; }
+        
+        .back-btn { background: var(--surface); color: var(--primary); border: 2px solid var(--primary); font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 99px; margin: 20px 0;}
+        .day-title { font-size: 28px; font-weight: 900; color: var(--primary); margin-bottom: 20px;}
+
+        .exercise-item { 
+            background: var(--surface); border-radius: var(--radius-lg); padding: 16px;
+            display: flex; align-items: center; border: 2px solid transparent; box-shadow: var(--shadow); position: relative;
+            margin-bottom: 16px;
+        }
+        .exercise-item.done { opacity: 0.5; transform: scale(0.98); }
+        
+        .ex-img { width: 70px; height: 70px; border-radius: 16px; object-fit: cover; background: #EEE; margin-right: 16px; }
+        .ex-info { flex: 1; }
+        .ex-muscle { font-size: 11px; text-transform: uppercase; font-weight: 900; color: var(--primary); letter-spacing: 1px;}
+        .ex-name { font-size: 17px; font-weight: 900; margin-bottom: 4px; color: var(--text-main);}
+        .ex-reps { font-size: 13px; font-weight: 900; color: var(--primary); background: rgba(0,0,0,0.04); padding: 4px 10px; border-radius: 8px; display: inline-block;}
+
+        .checkbox { width: 42px; height: 42px; border-radius: 50%; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; background: var(--surface); transition: 0.3s;}
+        .exercise-item.done .checkbox { background: var(--primary); }
+
+        .sales-box { background: var(--surface); border-radius: var(--radius-lg); padding: 24px; margin: 20px; text-align: center; box-shadow: var(--shadow); border: 2px dashed var(--primary);}
+        .sales-box h3 { font-size: 19px; font-weight: 900; color: var(--primary); margin-bottom: 8px;}
+        .sales-box p { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px;}
+        .btn-buy { background: var(--primary-gradient); color: #FFF; width: 100%; padding: 15px; border-radius: 99px; font-size: 16px; font-weight: 900; border: none; cursor: pointer; box-shadow: var(--shadow);}
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 2000; padding: 20px;}
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--surface); width: 100%; max-width: 450px; border-radius: 32px; padding: 30px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3);}
+        .modal-content h2 { color: var(--primary); font-size: 22px; font-weight: 900; margin-bottom: 16px; }
+        .manual-step { margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--text-main); }
+        .manual-step strong { color: var(--primary); display: block; font-size: 14px; margin-bottom: 2px;}
+        .btn-close-modal { width: 100%; padding: 14px; background: var(--primary); color: #FFF; border: none; border-radius: 99px; font-weight: 900; margin-top: 20px; cursor: pointer;}
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; 
+            background: var(--surface); border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around;
+            padding: 14px 0 20px 0; z-index: 900;
+        }
+        .nav-item { font-size: 13px; font-weight: 800; color: var(--primary); }
+    </style>
+</head>
+<body id="appBody">
+
+    <div class="demo-banner">🔒 Smart-Fit Business Suite - Demo Interactiva</div>
+
+    <div class="mode-selector">
+        <span>✨ Elegí el Estilo:</span>
+        <div class="mode-btns">
+            <button class="mode-btn active" id="btnFemale" onclick="setTheme('female')">🌸 Femenino</button>
+            <button class="mode-btn" id="btnMale" onclick="setTheme('male')">⚡ Dark Gym</button>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="header-info">
+            <img src="logo.svg" alt="Logo" onerror="this.src='https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=100&q=80'">
+            <div>
+                <h1 id="brandTitle">Smart-Fit</h1>
+                <p>Edición Gimnasios</p>
+            </div>
+        </div>
+        <button class="btn-manual-float" onclick="openManual()">📖 Manual</button>
+    </div>
+
+    <!-- VISTA PRINCIPAL -->
+    <div id="homeView">
+        <div class="days-grid">
+            <div class="day-card d1" onclick="openDemoDay(1)"><div class="day-num">DÍA 1 🏋️‍♂️</div><div class="day-desc">Tren Superior / Core (Probá este)</div></div>
+            <div class="day-card d2" onclick="openDemoDay(2)"><div class="day-num">DÍA 2 🔥</div><div class="day-desc">Tren Inferior / Piernas</div></div>
+            <div class="day-card d3" onclick="openDemoDay(3)"><div class="day-num">DÍA 3 ⚡</div><div class="day-desc">Full Body / Funcional</div></div>
+        </div>
+
+        <div class="sales-box">
+            <h3>¿Querés implementar esto en tu gym? ✨</h3>
+            <p>Sistema cloud multiusuario, carga masiva por Excel, perfiles personalizados y cero fricción para los socios.</p>
+            <button class="btn-buy" onclick="alert('¡Excelente decisión! Contacta al desarrollador para cotizar la instalación en tu establecimiento.')">💬 Consultar Comercialización</button>
+        </div>
+    </div>
+
+    <!-- VISTA ENTRENAMIENTO -->
+    <div id="workoutView" class="routine-container">
+        <button class="back-btn" onclick="goHome()">← Volver al Menú</button>
+        <h2 class="day-title" id="demoTitle">Rutina</h2>
+        <div id="demoExercises"></div>
+    </div>
+
+    <!-- MODAL MANUAL -->
+    <div class="modal-overlay" id="manualModal">
+        <div class="modal-content">
+            <h2>Manual del Sistema 📋</h2>
+            <div class="manual-step">
+                <strong>📥 Carga Masiva por Excel</strong>
+                El administrador sube una planilla y actualiza los ejercicios de todo el gimnasio de forma sincronizada.
+            </div>
+            <div class="manual-step">
+                <strong>🔄 Sistema Zero-Scroll</strong>
+                Al tildar un ejercicio completado, baja automáticamente al fondo. El socio nunca pierde de vista lo que sigue.
+            </div>
+            <div class="manual-step">
+                <strong>☁️ Sincronización en la Nube</strong>
+                Base de datos en tiempo real. Registro de pesos (Kg) independientes por socio sin solapamientos.
+            </div>
+            <div class="manual-step">
+                <strong>🎨 Multi-Tema Dinámico</strong>
+                Adaptable estéticamente para propuestas comerciales orientadas a centros de musculación o fitness integral.
+            </div>
+            <button class="btn-close-modal" onclick="closeManual()">Entendido ✨</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item">Smart-Fit SaaS Architecture</div>
+    </div>
+
+    <script>
+        // OFUSCACIÓN DE SEGURIDAD
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', event => {
+            if (event.keyCode === 123 || (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74)) || (event.ctrlKey && event.keyCode === 85)) {
+                event.preventDefault();
+                alert("🔒 Código protegido bajo derechos de propiedad intelectual.");
+            }
+        });
+
+        function setTheme(mode) {
+            const body = document.getElementById('appBody');
+            const meta = document.getElementById('metaTheme');
+            if(mode === 'male') {
+                body.classList.add('theme-male');
+                document.getElementById('btnMale').classList.add('active');
+                document.getElementById('btnFemale').classList.remove('active');
+                meta.setAttribute('content', '#0F172A');
+            } else {
+                body.classList.remove('theme-male');
+                document.getElementById('btnFemale').classList.add('active');
+                document.getElementById('btnMale').classList.remove('active');
+                meta.setAttribute('content', '#FF7E7E');
+            }
+        }
+
+        const demoRutinas = {
+            1: { title: "Día 1 - Tren Superior", ejercicios: [
+                { muscle: "Pecho", name: "Press de Banca Plano", reps: "4 x 10", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&q=80" },
+                { muscle: "Espalda", name: "Remo con Barra", reps: "4 x 10", img: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=200&q=80" }
+            ]},
+            2: { title: "Día 2 - Tren Inferior", ejercicios: [
+                { muscle: "Piernas", name: "Sentadilla Libre", reps: "4 x 10", img: "https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=200&q=80" },
+                { muscle: "Glúteos", name: "Hip Thrust con Barra", reps: "4 x 10", img: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=200&q=80" }
+            ]},
+            3: { title: "Día 3 - Full Body", ejercicios: [
+                { muscle: "Hombros", name: "Press Militar", reps: "4 x 10", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200&q=80" }
+            ]}
+        };
+
+        function openDemoDay(dayNum) {
+            const data = demoRutinas[dayNum];
+            document.getElementById('demoTitle').textContent = data.title;
+            
+            const list = document.getElementById('demoExercises');
+            list.innerHTML = data.ejercicios.map((ex, i) => `
+                <div class="exercise-item" onclick="toggleDemoEx(this)">
+                    <img src="${ex.img}" class="ex-img">
+                    <div class="ex-info">
+                        <div class="ex-muscle">${ex.muscle}</div>
+                        <div class="ex-name">${ex.name}</div>
+                        <div class="ex-reps">${ex.reps}</div>
+                    </div>
+                    <div class="checkbox"></div>
+                </div>
+            `).join('');
+
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('workoutView').classList.add('active');
+        }
+
+        function goHome() {
+            document.getElementById('workoutView').classList.remove('active');
+            document.getElementById('homeView').style.display = 'block';
+        }
+
+        function toggleDemoEx(el) {
+            el.classList.toggle('done');
+            const check = el.querySelector('.checkbox');
+            if(el.classList.contains('done')) {
+                check.innerHTML = '<svg width="20" height="20" fill="none" stroke="#FFF" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>';
+            } else {
+                check.innerHTML = '';
+            }
+        }
+
+        function openManual() { document.getElementById('manualModal').classList.add('active'); }
+        function closeManual() { document.getElementById('manualModal').classList.remove('active'); }
+    </script>
+</body>
+</html>
