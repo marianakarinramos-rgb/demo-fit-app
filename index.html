@@ -6,9 +6,8 @@
     <meta name="theme-color" content="#0F172A">
     <title>Smart-Fit | Business Suite DEMO</title>
     
-    <!-- Enlace al Manifest para que sea instalable (PWA) -->
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Dumbbell_icon.svg/192px-Dumbbell_icon.svg.png">
+    <link rel="apple-touch-icon" href="./logo.png">
     
     <style>
         :root {
@@ -35,6 +34,7 @@
         .demo-banner {
             background: #0284C7; color: #FFF; text-align: center; padding: 8px;
             font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+            position: sticky; top: 0; z-index: 1000;
         }
 
         /* Login */
@@ -70,27 +70,26 @@
             font-size: 13px; font-weight: 800; cursor: pointer; text-decoration: underline;
         }
 
-        /* Alerta de Cuota */
-        .fee-alert-box {
-            background: #451A03; border: 2px solid #F87171; color: #FEE2E2; padding: 14px; border-radius: 16px;
-            margin: 20px; text-align: center; font-weight: 800; font-size: 13px; box-shadow: var(--shadow);
-        }
+        /* Vistas Pestañas */
+        .app-view { display: none; animation: fadeIn 0.4s ease; padding: 20px; }
+        .app-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .header { 
             padding: 20px; background: var(--surface); border-bottom: 1px solid var(--border); 
-            position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: space-between;
         }
         .header-info h1 { font-size: 18px; font-weight: 900; color: var(--text-main); }
         .header-info p { color: var(--primary); font-size: 11px; font-weight: 900; text-transform: uppercase; }
 
-        .days-grid { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 20px; }
+        /* Pestaña Rutina */
+        .days-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
         .day-card { 
             background: var(--surface); border-radius: var(--radius-lg); padding: 20px; 
-            border: 2px solid var(--border); cursor: pointer; box-shadow: var(--shadow); 
+            border: 1px solid var(--border); cursor: pointer; box-shadow: var(--shadow); 
             position: relative; overflow: hidden; min-height: 90px; display: flex; flex-direction: column; justify-content: center;
         }
-        .day-card::after { content: ''; position: absolute; left: 0; top: 0; width: 10px; height: 100%; border-radius: 10px 0 0 10px;}
+        .day-card::after { content: ''; position: absolute; left: 0; top: 0; width: 8px; height: 100%; border-radius: 10px 0 0 10px;}
         .day-num { font-size: 20px; font-weight: 900; margin-bottom: 2px; color: var(--text-main); }
         .day-desc { font-size: 13px; font-weight: 700; color: var(--text-muted); }
         .day-card.d1::after { background-color: #38BDF8; } 
@@ -98,16 +97,16 @@
         .day-card.d3::after { background-color: #F43F5E; } 
         .day-card.d4::after { background-color: #A855F7; } 
 
-        .routine-container { display: none; padding: 0 20px; }
+        .routine-container { display: none; }
         .routine-container.active { display: block; }
         
-        .back-btn { background: var(--surface); color: var(--primary); border: 2px solid var(--border); font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 99px;}
-        .day-title { font-size: 26px; font-weight: 900; color: var(--primary); margin: 15px 0; }
+        .back-btn { background: var(--surface); color: var(--primary); border: 1px solid var(--border); font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 99px;}
+        .day-title { font-size: 24px; font-weight: 900; color: var(--primary); margin: 15px 0; }
 
         .exercise-item { 
-            background: var(--surface); border-radius: var(--radius-lg); padding: 14px;
-            display: flex; align-items: center; border: 2px solid var(--border); box-shadow: var(--shadow); position: relative;
-            margin-bottom: 14px;
+            background: var(--surface); border-radius: 20px; padding: 14px;
+            display: flex; align-items: center; border: 1px solid var(--border); box-shadow: var(--shadow);
+            margin-bottom: 14px; transition: 0.3s;
         }
         .exercise-item.done { opacity: 0.4; background: #090D16; }
         
@@ -120,61 +119,168 @@
         .checkbox { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; background: var(--surface); transition: 0.3s;}
         .exercise-item.done .checkbox { background: var(--primary); border-color: var(--primary); }
 
-        .sales-box { background: var(--surface); border-radius: var(--radius-lg); padding: 22px; margin: 20px; text-align: center; box-shadow: var(--shadow); border: 2px dashed var(--primary);}
-        .sales-box h3 { font-size: 17px; font-weight: 900; color: var(--primary); margin-bottom: 8px;}
-        .sales-box p { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px;}
-        .btn-buy { background: var(--primary-gradient); color: #0F172A; width: 100%; padding: 14px; border-radius: 99px; font-size: 15px; font-weight: 900; border: none; cursor: pointer; box-shadow: var(--shadow);}
+        /* Pestaña Perfil (Ficha) */
+        .profile-card { background: var(--surface); border-radius: var(--radius-lg); padding: 24px; border: 1px solid var(--border); margin-bottom: 20px;}
+        .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px;}
+        .profile-avatar { width: 60px; height: 60px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: #0F172A;}
+        .profile-data label { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; margin-bottom: 4px;}
+        .profile-data p { font-size: 15px; color: var(--text-main); font-weight: 700; margin-bottom: 15px;}
+        .status-badge { background: #451A03; color: #F87171; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 900; display: inline-block; border: 1px solid #F87171;}
+
+        /* Pestaña Tour Comercial B2B */
+        .tour-header { text-align: center; margin-bottom: 24px; }
+        .tour-header h2 { font-size: 22px; font-weight: 900; color: var(--primary); margin-bottom: 8px;}
+        .tour-header p { font-size: 14px; color: var(--text-muted); font-weight: 600;}
+        
+        .feature-card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); display: flex; align-items: flex-start; gap: 16px;}
+        .feature-icon { width: 45px; height: 45px; background: #0F172A; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid var(--primary); flex-shrink: 0;}
+        .feature-text h4 { font-size: 15px; font-weight: 900; color: var(--text-main); margin-bottom: 4px;}
+        .feature-text p { font-size: 13px; color: var(--text-muted); font-weight: 600; line-height: 1.5;}
+
+        .btn-buy { background: var(--primary-gradient); color: #0F172A; width: 100%; padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 900; border: none; cursor: pointer; box-shadow: var(--shadow); margin-top: 10px;}
+
+        /* Navegación Inferior */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; 
+            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border); display: flex; justify-content: space-around;
+            padding: 12px 0 24px 0; z-index: 900;
+        }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            font-size: 11px; font-weight: 800; color: var(--text-muted); cursor: pointer; transition: 0.3s;
+        }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="demo-banner">🔒 Smart-Fit Business Suite - Demostración Interactiva</div>
+    <div class="demo-banner">🔒 Smart-Fit Business Suite - Demostración Comercial</div>
 
     <!-- LOGIN -->
     <div id="userSelector">
         <div class="login-card">
             <h2>Smart-Fit ⚡</h2>
-            <p>Ingresá cualquier DNI para probar</p>
+            <p>Ingresá con el DNI de prueba</p>
             <input type="number" id="dniInput" class="dni-input" value="35444555">
-            <button class="btn-login" onclick="enterDemo()">Entrar como Socio 🚀</button>
+            <button class="btn-login" onclick="enterDemo()">Entrar a la App 🚀</button>
         </div>
-        <button class="admin-login-link" onclick="alert('🏢 Panel Admin Comercial:\n\nLa gestión de socios, importación de fichas médicas por Excel y actualización de rutinas masivas se muestran en videollamada comercial en vivo.')">🔐 Ver Acceso Dueño / Recepción</button>
+        <button class="admin-login-link" onclick="forceTab('viewTour')">🔐 Ver Funciones del Dueño (Admin)</button>
     </div>
 
     <!-- APP PRINCIPAL DEMO -->
     <div id="mainApp" style="display: none;">
         <div class="header">
             <div class="header-info">
-                <h1>Carlos Pérez</h1>
-                <p>PLAN NIVEL 1 (DEMO)</p>
+                <h1 id="headerName">Carlos Pérez</h1>
+                <p>NIVEL 1 - DEMO B2B</p>
             </div>
-            <button class="back-btn" onclick="location.reload()">Cerrar Sesión</button>
+            <button class="back-btn" onclick="location.reload()">Salir</button>
         </div>
 
-        <div class="fee-alert-box">
-            ⚠ <strong>Aviso de Vencimiento:</strong> Tu cuota vence en breve. (Módulo automático anti-morosidad activo).
-        </div>
-
-        <div id="tabRutina" class="app-view active">
+        <!-- VISTA 1: RUTINAS -->
+        <div id="viewRutina" class="app-view active">
             <div id="homeView">
-                <div class="days-grid">
-                    <div class="day-card d1" onclick="openDay(1)"><div class="day-num">DÍA 1 ⚡</div><div class="day-desc">Tren Superior / Fuerza</div></div>
-                    <div class="day-card d2" onclick="openDay(2)"><div class="day-num">DÍA 2 🚀</div><div class="day-desc">Tren Inferior / Potencia</div></div>
-                    <div class="day-card d3" onclick="openDay(3)"><div class="day-num">DÍA 3 🔥</div><div class="day-desc">Espalda / Core</div></div>
-                    <div class="day-card d4" onclick="openDay(4)"><div class="day-num">DÍA 4 🦾</div><div class="day-desc">Pecho / Brazos</div></div>
+                <div style="margin-bottom: 20px; padding: 12px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border: 1px solid var(--primary); color: var(--primary); font-size: 12px; font-weight: 700;">
+                    👋 ¡Hola! Navegá la app para probar la interfaz. Abajo tenés el menú con tu Ficha y las funciones B2B.
                 </div>
-
-                <div class="sales-box">
-                    <h3>¿Te interesa este software para tu gym? 💼</h3>
-                    <p>Sistema multiusuario por DNI, control de cuotas y fichas médicas integradas.</p>
-                    <button class="btn-buy" onclick="alert('¡Excelente! Contactá al proveedor para cotizar la instalación corporativa.')">💬 Solicitar Cotización B2B</button>
+                <div class="days-grid">
+                    <div class="day-card d1" onclick="openDay(1)"><div class="day-num">DÍA 1 ⚡</div><div class="day-desc">Fuerza / Tren Superior</div></div>
+                    <div class="day-card d2" onclick="openDay(2)"><div class="day-num">DÍA 2 🚀</div><div class="day-desc">Potencia / Tren Inferior</div></div>
+                    <div class="day-card d3" onclick="openDay(3)"><div class="day-num">DÍA 3 🔥</div><div class="day-desc">Hipertrofia Espalda</div></div>
                 </div>
             </div>
 
             <div id="workoutView" class="routine-container">
-                <button class="back-btn" onclick="goHome()" style="margin: 15px 0;">← Volver a Días</button>
+                <button class="back-btn" onclick="goHome()" style="margin-bottom: 15px;">← Volver</button>
                 <h2 class="day-title" id="dayTitle">Rutina</h2>
                 <div id="exerciseList"></div>
+            </div>
+        </div>
+
+        <!-- VISTA 2: PERFIL (FICHA MÉDICA) -->
+        <div id="viewPerfil" class="app-view">
+            <h2 style="font-size: 22px; font-weight: 900; color: var(--text-main); margin-bottom: 16px;">Mi Perfil Gym</h2>
+            
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">CP</div>
+                    <div>
+                        <h3 style="font-size: 18px; color: var(--primary);">Carlos Pérez</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600;">DNI: 35.444.555</p>
+                    </div>
+                </div>
+                
+                <div class="profile-data">
+                    <label>Estado de Cuota Mensual</label>
+                    <p><span class="status-badge">⚠ Vence Mañana (10/10)</span></p>
+
+                    <label>Ficha Médica (Seguro)</label>
+                    <p style="background: #090D16; padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+                        <strong>Grupo Sanguíneo:</strong> O+<br>
+                        <strong>Emergencias:</strong> María (11-4455-6677)<br>
+                        <strong>Patologías:</strong> Ninguna declarada.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 3: TOUR B2B (VENTAS ADMIN) -->
+        <div id="viewTour" class="app-view">
+            <div class="tour-header">
+                <h2>🏢 Premium Business Suite</h2>
+                <p>Todo lo que incluye el Panel de Administración para el dueño del gimnasio.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-text">
+                    <h4>Carga Masiva por Excel</h4>
+                    <p>Olvidate de tipear. Importá 500 socios, fechas de pago y fichas médicas con 1 clic subiendo una planilla.</p>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💸</div>
+                <div class="feature-text">
+                    <h4>Control de Morosos Automático</h4>
+                    <p>El sistema calcula vencimientos y le muestra un aviso bloqueante al socio moroso al ingresar su DNI.</p>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🏋️‍♂️</div>
+                <div class="feature-text">
+                    <h4>Asignación de Rutinas Global</h4>
+                    <p>Editá el "Nivel 1" desde tu panel y automáticamente se le actualiza la rutina a los 100 socios de ese nivel.</p>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📴</div>
+                <div class="feature-text">
+                    <h4>PWA 100% Offline</h4>
+                    <p>El socio instala la app. Si en el salón de pesas no hay señal ni Wi-Fi, la app sigue funcionando perfectamente sin internet.</p>
+                </div>
+            </div>
+
+            <button class="btn-buy" onclick="alert('¡Excelente decisión! Contactá al proveedor para instalar la plataforma en tu gimnasio y recibir capacitación del Panel Admin.')">💬 Solicitar Cotización Comercial</button>
+        </div>
+
+        <!-- MENÚ INFERIOR TIPO APP -->
+        <div class="bottom-nav">
+            <div class="nav-item active" id="nav-rutina" onclick="switchTab('Rutina')">
+                <span class="nav-icon">🏋️</span>
+                <span>Rutinas</span>
+            </div>
+            <div class="nav-item" id="nav-perfil" onclick="switchTab('Perfil')">
+                <span class="nav-icon">👤</span>
+                <span>Mi Ficha</span>
+            </div>
+            <div class="nav-item" id="nav-tour" onclick="switchTab('Tour')">
+                <span class="nav-icon">🚀</span>
+                <span>Info Dueños</span>
             </div>
         </div>
     </div>
@@ -189,17 +295,39 @@
                 { muscle: "Hombros", name: "Press Militar", reps: "4 x 10", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200&q=80" },
                 { muscle: "Glúteos", name: "Hip Thrust", reps: "4 x 10", img: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=200&q=80" }
             ]},
-            3: { title: "Nivel 3 - Día 3 (Espalda)", exs: [
-                { muscle: "Dorsales", name: "Dominadas o Jalón", reps: "4 x 8", img: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=200&q=80" }
-            ]},
-            4: { title: "Nivel 4 - Día 4 (Full Body)", exs: [
-                { muscle: "General", name: "Burpees / Funcional", reps: "3 x 15", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&q=80" }
+            3: { title: "Nivel 1 - Día 3 (Espalda)", exs: [
+                { muscle: "Dorsales", name: "Jalón al Pecho", reps: "4 x 12", img: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=200&q=80" }
             ]}
         };
 
         function enterDemo() {
             document.getElementById('userSelector').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
+            switchTab('Rutina');
+        }
+
+        function forceTab(tabId) {
+            enterDemo();
+            switchTab('Tour');
+        }
+
+        function switchTab(tabName) {
+            // Ocultar todas las vistas
+            document.getElementById('viewRutina').classList.remove('active');
+            document.getElementById('viewPerfil').classList.remove('active');
+            document.getElementById('viewTour').classList.remove('active');
+            
+            // Apagar iconos del menú
+            document.getElementById('nav-rutina').classList.remove('active');
+            document.getElementById('nav-perfil').classList.remove('active');
+            document.getElementById('nav-tour').classList.remove('active');
+
+            // Prender la seleccionada
+            document.getElementById('view' + tabName).classList.add('active');
+            document.getElementById('nav-' + tabName.toLowerCase()).classList.add('active');
+            
+            // Resetea vista de rutinas a la grilla si estaba abierta
+            if(tabName === 'Rutina') goHome();
         }
 
         function openDay(dayNum) {
@@ -238,14 +366,10 @@
             }
         }
 
-        // REGISTRO DEL MODO OFFLINE PARA LA DEMO
+        // REGISTRO DEL MODO OFFLINE
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(registration => {
-                    console.log('Modo Offline B2B Demo Activado 🚀');
-                }).catch(err => {
-                    console.log('Error al registrar ServiceWorker: ', err);
-                });
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
             });
         }
     </script>
