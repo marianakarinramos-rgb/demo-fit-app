@@ -156,7 +156,7 @@
 </head>
 <body>
 
-    <div class="demo-banner">🔒 Smart-Fit Business Suite - Demostración Comercial</div>
+    <div class="demo-banner">🔒 SMART-FIT BUSINESS SUITE - DEMOSTRACIÓN COMERCIAL</div>
 
     <!-- LOGIN -->
     <div id="userSelector">
@@ -189,6 +189,7 @@
                     <div class="day-card d1" onclick="openDay(1)"><div class="day-num">DÍA 1 ⚡</div><div class="day-desc">Fuerza / Tren Superior</div></div>
                     <div class="day-card d2" onclick="openDay(2)"><div class="day-num">DÍA 2 🚀</div><div class="day-desc">Potencia / Tren Inferior</div></div>
                     <div class="day-card d3" onclick="openDay(3)"><div class="day-num">DÍA 3 🔥</div><div class="day-desc">Hipertrofia Espalda</div></div>
+                    <div class="day-card d4" onclick="openDay(4)"><div class="day-num">DÍA 4 🦾</div><div class="day-desc">Full Body / Funcional</div></div>
                 </div>
             </div>
 
@@ -288,15 +289,32 @@
     <script>
         const rutinasDemo = {
             1: { title: "Nivel 1 - Día 1 (Fuerza)", exs: [
-                { muscle: "Piernas", name: "Prensa a 45°", reps: "4 x 10", img: "https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=200&q=80" },
-                { muscle: "Tríceps", name: "Tirones en Polea", reps: "4 x 10", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&q=80" }
+                { muscle: "Pecho", name: "Press de Banca Plano", reps: "4 x 10", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&q=80" },
+                { muscle: "Pecho", name: "Aperturas con Mancuernas", reps: "4 x 12", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&q=80" },
+                { muscle: "Hombros", name: "Press Militar", reps: "4 x 10", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80" },
+                { muscle: "Hombros", name: "Elevaciones Laterales", reps: "4 x 15", img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80" },
+                { muscle: "Tríceps", name: "Extensión en Polea Alta", reps: "4 x 12", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&q=80" }
             ]},
             2: { title: "Nivel 1 - Día 2 (Potencia)", exs: [
-                { muscle: "Hombros", name: "Press Militar", reps: "4 x 10", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=200&q=80" },
-                { muscle: "Glúteos", name: "Hip Thrust", reps: "4 x 10", img: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=200&q=80" }
+                { muscle: "Piernas", name: "Sentadilla Libre", reps: "4 x 10", img: "https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=400&q=80" },
+                { muscle: "Piernas", name: "Prensa a 45°", reps: "4 x 12", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80" },
+                { muscle: "Femorales", name: "Peso Muerto Rumano", reps: "4 x 10", img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80" },
+                { muscle: "Glúteos", name: "Hip Thrust", reps: "4 x 12", img: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=400&q=80" },
+                { muscle: "Gemelos", name: "Elevación de Talones", reps: "4 x 20", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&q=80" }
             ]},
             3: { title: "Nivel 1 - Día 3 (Espalda)", exs: [
-                { muscle: "Dorsales", name: "Jalón al Pecho", reps: "4 x 12", img: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=200&q=80" }
+                { muscle: "Dorsales", name: "Dominadas / Jalón al Pecho", reps: "4 x 10", img: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=400&q=80" },
+                { muscle: "Espalda", name: "Remo con Barra", reps: "4 x 10", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&q=80" },
+                { muscle: "Espalda", name: "Remo Gironda", reps: "4 x 12", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80" },
+                { muscle: "Bíceps", name: "Curl con Barra", reps: "4 x 12", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&q=80" },
+                { muscle: "Bíceps", name: "Curl Martillo", reps: "4 x 12", img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80" }
+            ]},
+            4: { title: "Nivel 1 - Día 4 (Funcional)", exs: [
+                { muscle: "Core", name: "Plancha Abdominal", reps: "4 x 60 seg", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&q=80" },
+                { muscle: "Cardio", name: "Burpees", reps: "4 x 15", img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80" },
+                { muscle: "General", name: "Kettlebell Swings", reps: "4 x 15", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80" },
+                { muscle: "Piernas", name: "Saltos al Cajón", reps: "4 x 10", img: "https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=400&q=80" },
+                { muscle: "Core", name: "Crunches en Polea", reps: "4 x 20", img: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&q=80" }
             ]}
         };
 
