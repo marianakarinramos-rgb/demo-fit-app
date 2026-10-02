@@ -1,8 +1,10 @@
-const CACHE_NAME = 'smartfit-demo-v1';
+const CACHE_NAME = 'smartfit-demo-v3';
 const urlsToCache = [
     './',
     './index.html',
-    './manifest.json'
+    './manifest.json',
+    './logo.png',
+    './logo-192.png'
 ];
 
 self.addEventListener('install', event => {
