@@ -6,6 +6,10 @@
     <meta name="theme-color" content="#0F172A">
     <title>Smart-Fit | Business Suite DEMO</title>
     
+    <!-- Enlace al Manifest para que sea instalable (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Dumbbell_icon.svg/192px-Dumbbell_icon.svg.png">
+    
     <style>
         :root {
             --bg-light: #0F172A;
@@ -232,6 +236,17 @@
             } else {
                 check.innerHTML = '';
             }
+        }
+
+        // REGISTRO DEL MODO OFFLINE PARA LA DEMO
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(registration => {
+                    console.log('Modo Offline B2B Demo Activado 🚀');
+                }).catch(err => {
+                    console.log('Error al registrar ServiceWorker: ', err);
+                });
+            });
         }
     </script>
 </body>
